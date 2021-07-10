@@ -65,7 +65,7 @@ async function login(req,res){
                 var date = new Date();
                 date.setTime(date.getTime() + (30*60*1000));
                 expires = "; expires=" + date.toUTCString();
-                res.writeHead(200,{'Content-type':'application/json','Set-Cookie':`jwt=${token};Expires=${expires};HttpOnly;Secure`})
+                res.writeHead(200,{'Content-type':'application/json','Set-Cookie':`jwt=${token};Expires=${expires};HttpOnly`})
                 res.end(JSON.stringify({name,email,api_key} ))
             }else{
                 res.writeHead(403,{'Content-type':'application/json'})
@@ -190,7 +190,7 @@ async function regenApiKey(req,res){
 }
 
 async function logout(req,res){
-        res.writeHead(200,{'Content-type':'application/json','Set-Cookie':`jwt=8a7sda;expires=Thu, 01 Jan 1970 00:00:00 UTC;HttpOnly;Secure`})
+        res.writeHead(200,{'Content-type':'application/json','Set-Cookie':`jwt=8a7sda;expires=Thu, 01 Jan 1970 00:00:00 UTC;HttpOnly`})
         res.end(JSON.stringify({message: "Logged out successfully !"} ))
 }
 
