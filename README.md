@@ -7,3 +7,6 @@ A rest api platform powered by node.js and doesn't ueses any front end framework
 - User have to sign up and get the api key to use API provided by platform
 - User can regenarate api key
 - Password hashing
+
+## Live Preview
+http://ec2-52-15-158-20.us-east-2.compute.amazonaws.com:5000/
