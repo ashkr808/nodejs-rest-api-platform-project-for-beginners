@@ -137,7 +137,7 @@ async function checkAuthPrivate(req,res){
     try{
         
         if(!req.headers.cookie){
-            return {err:true,message: "No autheticatation found !"}
+            return {err:true,message: "No autheticatation found !!"}
         }
 
         const cookies = req.headers.cookie.split(';').map(cookie=>{
