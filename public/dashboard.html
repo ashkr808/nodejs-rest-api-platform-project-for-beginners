@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Products API</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style type="text/css">
+      .apiKey{
+        padding: 20px;
+        border-radius: 5px;
+        background-color: #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .apiKey span{
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+
+      <div class="jumbotron text-center pt-0">
+        <div class="d-flex container justify-content-between  align-items-center p-4 mb-3 navigation">
+            <div class="left">
+              <a href="/" class="text-white lead">Products<b>API</b> </a>
+            </div>
+            <div class="right">
+              
+            </div>
+        </div>
+          <h1 class="display-4">Dashboard</h1>
+          <p class="lead">Mamage your account</p>
+          <img src="/assets/images/react-illus.svg" height="100" alt="">
+          <hr class="my-2">
+      </div>
+      <div class="container">
+          <section>
+            <h4>API Key</h4>
+            <hr>
+            <div class="apiKey">
+              <span></span>
+              <div>
+                <button class="btn  btn-success" onclick="copyApiKey()">Copy</button>
+                <button class="btn  btn-secondary"  onclick="regenApiKey()">Re-Generate</button>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h4>Usage</h4>
+            <hr>
+            <div class="p-4 d-flex flex-column  justify-content-center  align-items-center">
+                  <h1 id="totalRequest"></h1>
+                  <span>Total requests</span>
+            </div>
+          </section>
+
+      </div>
+      
+      <footer class="mt-5 d-none p-5 bg-dark text-white text-center">
+        <a href="/about" class="text-white lead text-center mt-5">About Us</a>
+      </footer>
+
+      
+    <script>
+  
+      async function checkAuth(){
+          await axios.post('/checkAuth')
+              .then(res=>{
+                // console.log(res.data.payload)
+                document.querySelector('#totalRequest').textContent = res.data.payload.request
+                document.querySelector('.apiKey span').innerHTML = res.data.payload.api_key
+                navHTML = `
+                  <a href="/dashboard" class="btn btn-primary">${res.data.payload.name}</a>
+                  <button onclick="logout()" class="btn btn-outline-light ml-3">Logout</button>
+                `
+              })
+              .catch(err=>{
+                document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                window.location.replace("/");
+              })
+        document.querySelector('.navigation .right').innerHTML = navHTML
+      }
+      checkAuth()
+
+      async function logout(){
+        axios.defaults.withcredentials = true
+        await axios.post('/logout')
+        .then(res=>{
+          console.log(res)
+        })
+        .catch(err=>{
+         console.log(err)
+        })
+
+        checkAuth()
+      }
+
+      function copyApiKey(){
+        const input = document.createElement('input');
+        input.value = document.querySelector('.apiKey span').textContent;
+        document.body.appendChild(input)
+        input.select()
+        input.setSelectionRange(0, 99999)
+        document.execCommand("copy");
+        alert('API key copied !')
+        input.remove()
+      }
+      function regenApiKey(){
+        const cookies = document.cookie.split(';').map(cookie=>{
+          let key = cookie.split('=')[0]
+          let value = cookie.split('=')[1]
+          return {
+              [key] :value
+          }
+          })
+          let token = cookies.filter(cookie=>cookie.jwt)[0]
+        axios.post("/regenApiKey")
+        .then(res=>{
+          // console.log(res)
+          document.querySelector('.apiKey span').textContent = res.data.payload.api_key
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
+

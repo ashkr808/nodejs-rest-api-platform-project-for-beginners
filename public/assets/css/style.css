@@ -1,6 +1,7 @@
 .jumbotron{
     background-color: #222;
     color: #fff;
+    border-radius: 0 !important;
 }
 body{
     background-color: #eee;

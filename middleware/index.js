@@ -9,6 +9,7 @@ function isAuthenricated(req,res){
         }
         let found = users.filter(user=>user.api_key === headers['x-api-key'])
         if(found.length === 1){
+            req.apiKey = headers['x-api-key'];
             return true
         }
         else{

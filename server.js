@@ -1,12 +1,12 @@
 const http = require('http')
 const {getProducts,getProduct,createProduct,deleteProduct,updateProduct} = require('./controller/ProductController')
-const {getHompage,getAboutPage,sendPublicAssets, handleFeeadbackForm, getLoginPage} = require('./controller/PagesController')
-const {createUser} = require('./controller/AuthController')
+const {getHompage,getAboutPage,sendPublicAssets, handleFeeadbackForm, getLoginPage,getSignUpPage, getDashboardPage} = require('./controller/PagesController')
+const {createUser,login, checkAuth, signup,regenApiKey, logout} = require('./controller/AuthController')
 const {isAuthenricated} = require('./middleware')
 
 const server = http.createServer(async(req,res)=>{
     if(req.url === '/'){
-        
+         
         getHompage(req,res)
 
     } else if(req.url === '/about'){
@@ -17,11 +17,35 @@ const server = http.createServer(async(req,res)=>{
 
         getLoginPage(req,res)
 
+    } else if(req.url === '/signup' && req.method === 'GET'){
+
+        getSignUpPage(req,res)
+
+    } else if(req.url === '/dashboard' && req.method === 'GET'){
+       
+        getDashboardPage(req,res)
+
     } else if(req.url === '/login'  && req.method === 'POST'){
 
-        res.end("hello")
+        login(req,res)
 
-    }  else if(req.url === '/feedback' && req.method === 'POST'){
+    } else if(req.url === '/logout'  && req.method === 'POST'){
+
+        logout(req,res)
+
+    }  else if(req.url === '/signup' && req.method === 'POST'){
+
+        signup(req,res)
+
+    }  else if(req.url === '/checkAuth'  && req.method === 'POST'){
+
+        checkAuth(req,res)
+
+    } else if(req.url === '/regenApiKey'  && req.method === 'POST'){
+
+        regenApiKey(req,res)
+
+    } else if(req.url === '/feedback' && req.method === 'POST'){
 
         handleFeeadbackForm(req,res)
 

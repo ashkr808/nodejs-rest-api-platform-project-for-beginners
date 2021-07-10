@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
       
-    <title>Products API</title>
+    <title>Sign UP | Products API</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -32,11 +32,15 @@
                     <img class="card-img-top mt-4" src="/assets/images/react-illus.svg" alt="" height="100">
                     
                     <div class="card-body">
-                        <h4 class="card-title lead text-center">Login</h4>
-                        <form action="/login" method="POST">
+                        <h4 class="card-title lead text-center"><b>Create an account</b></h4>
+                        <form  method="POST">
+                            <div class="form-group mb-3">
+                                <label for="name">Name</label>
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Enter name">
+                            </div>
                             <div class="form-group mb-3">
                                 <label for="email">Email</label>
-                                <input  type="email" name="email" id="email" class="form-control" placeholder="Enter email">
+                                <input type="text" name="email" id="email" class="form-control" placeholder="Enter email">
                             </div>
                             <div class="form-group mb-3">
                                 <label for="password">Password</label>
@@ -44,11 +48,9 @@
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Submit</button>
                             <a href="/" class="btn btn-outline-primary btn-block mt-2">Back to Home</a>
-
                             <div class="alert-area mt-3">
                                
                             </div>
-                            
                         </form>
                     </div>
                   </div>
@@ -56,31 +58,40 @@
         
       </div>
     
-    <script>
+      <script>
         const form = document.querySelector('form');
         form.addEventListener('submit',(e)=>{
             e.preventDefault()
-            axios.post('/login',{
-                email: form.querySelector('[type=email]').value,
-                password : form.querySelector('[type=password]').value
+            axios.post('/signup',{
+                name: form.querySelector('[name=name]').value,
+                email: form.querySelector('[name=email]').value,
+                password : form.querySelector('[name=password]').value
             })
             .then(res=>{
                 const data = res.data
                 console.log(data)
+                var expires = "";
+                var date = new Date();
+                date.setTime(date.getTime() + (1*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+                document.cookie = "jwt" + "=" + (data.token || "")  + expires + "; path=/";
                 checkAuth()
             })
             .catch(err=>{
                 if(err.response){
                     console.log(err.response)
                     let code = err.response.status
-                    if(code === 403){
-                        const  alertBox = document.createElement('div')
-                        alertBox.setAttribute('class','alert alert-warning text-center mt-2')
-                        alertBox.innerHTML = err.response.data.message
-                        document.querySelector('.alert-area').appendChild(alertBox)
-                        setTimeout(()=>{
-                            alertBox.remove()
-                        },3000)
+                    if(code === 422){
+                        err.response.data.errors.forEach(err => {
+                            const  alertBox = document.createElement('div')
+                            alertBox.setAttribute('class','alert alert-warning text-center mt-2')
+                            alertBox.innerHTML = Object.values(err)[0]
+                            document.querySelector('.alert-area').appendChild(alertBox)
+                            setTimeout(()=>{
+                                alertBox.remove()
+                            },3000)
+                        });
+                        
                     }
                 }
                 else 

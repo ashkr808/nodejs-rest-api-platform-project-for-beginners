@@ -16,7 +16,12 @@ async function sendPublicAssets(req,res){
 async function getLoginPage(req,res){
         getPublicAssets('login.html',req,res)
 }
-
+async function getSignUpPage(req,res){
+        getPublicAssets('signup.html',req,res)
+}
+async function getDashboardPage(req,res){
+        getPublicAssets('dashboard.html',req,res)
+}
 async function handleFeeadbackForm(req,res){
         let data = await getPostData(req)
         let url = `http://test.com/?${data}`
@@ -74,5 +79,7 @@ module.exports={
     getAboutPage,
     sendPublicAssets,
     handleFeeadbackForm,
-    getLoginPage
+    getLoginPage,
+    getSignUpPage,
+    getDashboardPage
 }

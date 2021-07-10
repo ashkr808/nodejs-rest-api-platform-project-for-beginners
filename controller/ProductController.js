@@ -1,4 +1,5 @@
 const Product = require('../models/Product')
+const {incrRequst} = require('../models/User')
 const {getPostData} = require('../utils')
 
 
@@ -7,6 +8,7 @@ const {getPostData} = require('../utils')
 async function getProducts(req, res){
     try{
         const products = await Product.findAll()
+        incrRequst(req.apiKey)
         res.writeHead(200,{'Content-type':'application/json'})
         res.end(JSON.stringify(products));
     }
@@ -24,6 +26,7 @@ async function getProduct(req,res,id){
             res.writeHead(404,{'Content-type':'application/json'})
             res.end(JSON.stringify({message: "Product not found !"}));
         }else{
+            incrRequst(req.apiKey)
             res.writeHead(200,{'Content-type':'application/json'})
             res.end(JSON.stringify(products));
         }
@@ -36,6 +39,7 @@ async function getProduct(req,res,id){
 // @dsec    create a product
 //@route    POST     /api/products
 async function createProduct(req, res){
+    incrRequst(req.apiKey)
     try{
         const data = await getPostData(req)
         const {title,description,price} = JSON.parse(data)
@@ -95,7 +99,8 @@ async function updateProduct(req, res,id){
             return
         }
         const updatedProduct = await Product.update(product,id)  
-        if(updatedProduct){
+        if(updatedProduct){ 
+            incrRequst(req.apiKey)
             res.writeHead(201,{'Content-type':'application/json'})
             res.end(JSON.stringify(updatedProduct))
         }
@@ -121,6 +126,7 @@ async function deleteProduct(req,res,id){
             res.writeHead(404,{'Content-type':'application/json'})
             res.end(JSON.stringify({message: "Product not found"}));
         }else{
+            incrRequst(req.apiKey)
             res.writeHead(200,{'Content-type':'application/json'})
             res.end(JSON.stringify({message:'Product deleted !!'}));
         }
